@@ -10,7 +10,7 @@ app.use(express.json());
 
 // --- VNPAY INTEGRATION ---
 const VNPAY_TMN_CODE = "4K175GIS";
-const VNPAY_HASH_SECRET = "KOYB9O92EUDMYBJ9BP2CGN58WEIBYN0J";
+const VNPAY_HASH_SECRET = "3GKF0L4CZTQ12YR7P3AU18S07BW9RFX1";
 const VNPAY_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 const VNPAY_RETURN_URL = "https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#returnurl";
 
