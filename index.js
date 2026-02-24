@@ -35,9 +35,14 @@ app.post('/create_payment_url', (req, res) => {
         const date = new Date();
         const createDate = moment(date).utcOffset(7).format('YYYYMMDDHHmmss');
 
-        const ipAddr = req.headers['x-forwarded-for'] ||
+        let ipAddr = req.headers['x-forwarded-for'] ||
             req.socket.remoteAddress ||
             '127.0.0.1';
+
+        // Handle proxy array of IPs
+        if (ipAddr && ipAddr.includes(',')) {
+            ipAddr = ipAddr.split(',')[0].trim();
+        }
 
         const amount = req.body.amount;
         const orderInfo = req.body.orderInfo || "Thanh toan don hang";
