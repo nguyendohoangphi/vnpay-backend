@@ -75,8 +75,6 @@ app.post('/create_payment_url', (req, res) => {
     }
 });
 
-// Đây là IPN URL (Server-to-Server) mà email VNPAY nhắc đến
-// Bạn sẽ copy domain của bạn gắn đuôi /vnpay_ipn để gửi cho VNPAY. Ví dụ: https://your-app-name.onrender.com/vnpay_ipn
 app.get('/vnpay_ipn', (req, res) => {
     let vnp_Params = req.query;
     let secureHash = vnp_Params['vnp_SecureHash'];
@@ -93,21 +91,16 @@ app.get('/vnpay_ipn', (req, res) => {
     let signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest("hex");
 
     if (secureHash === signed) {
-        // Kiểm tra dữ liệu xem đơn hàng có trùng khớp không
-        // (Ở đây bạn kết nối Firebase Admin SDK để sửa trạng thái đơn hàng thành "Đã thanh toán")
+        // check data đơn hàng có trùng khớp không
 
         if (rspCode == '00') {
-            // Thanh toán thành công (Update DB)
             console.log(`Đã cập nhật DB: Đơn hàng ${orderId} thanh toán THÀNH CÔNG.`);
         } else {
-            // Thanh toán thất bại (Update DB)
             console.log(`Đơn hàng ${orderId} thanh toán THẤT BẠI.`);
         }
 
-        // Trả mã 00 báo cho VNPAY biết là máy chủ đã ghi nhận IPN thành công
         res.status(200).json({ RspCode: '00', Message: 'Confirm Success' })
     } else {
-        // Checksum sai, báo lỗi
         res.status(200).json({ RspCode: '97', Message: 'Invalid Checksum' })
     }
 });
